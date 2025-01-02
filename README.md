@@ -25,7 +25,7 @@ This is a backend application for managing products, categories, and discounts u
    
 2. The application will be accessible at:
     ```
-   http://localhost:8080/v1
+   http://localhost:8080
    
 ## Testing
 1. To test the application, run the following command in the root of the project:
