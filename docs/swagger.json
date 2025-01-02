@@ -1,0 +1,359 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/discounts": {
+            "get": {
+                "description": "Retrieve a list of all available discounts",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all discounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/discount.GeneralDiscount"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new discount with the provided details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new discount",
+                "parameters": [
+                    {
+                        "description": "Discount details",
+                        "name": "discount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/discount.DiscountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/discount.DiscountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Wrong body",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "description": "Retrieve a list of products, with optional filtering by category and price range",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all products",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 5,
+                        "description": "Limit the number of products",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter products by category ID",
+                        "name": "category",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter products with price less than",
+                        "name": "priceLessThan",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter products with price greater than",
+                        "name": "priceGreaterThan",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/product.ProductResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new product with the provided details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new product",
+                "parameters": [
+                    {
+                        "description": "Product details",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/product.ProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/product.ProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Wrong body",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "description": "Get the details of a product by its SKU",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a product by SKU",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product SKU",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/product.ProductResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.ApiError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "apierror.ApiError": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "discount.DiscountRequest": {
+            "description": "DiscountRequest is the input for creating a new discount",
+            "type": "object",
+            "properties": {
+                "discount_type_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "percentage": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "target": {
+                    "type": "string",
+                    "example": "boots"
+                }
+            }
+        },
+        "discount.DiscountResponse": {
+            "description": "DiscountResponse is the response structure when fetching discounts",
+            "type": "object",
+            "properties": {
+                "discount_type": {
+                    "$ref": "#/definitions/discount.DiscountType"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "percentage": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "target": {
+                    "type": "string",
+                    "example": "boots"
+                }
+            }
+        },
+        "discount.DiscountType": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "type": {
+                    "type": "string",
+                    "example": "category"
+                }
+            }
+        },
+        "discount.GeneralDiscount": {
+            "description": "GeneralDiscount defines the fields for a general discount, including percentage and target",
+            "type": "object",
+            "properties": {
+                "discount_type": {
+                    "$ref": "#/definitions/discount.DiscountType"
+                },
+                "discount_type_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "percentage": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "target": {
+                    "type": "string",
+                    "example": "boots"
+                }
+            }
+        },
+        "product.PriceResponse": {
+            "description": "PriceResponse includes the original and final price of a product, along with any discounts",
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string",
+                    "example": "EUR"
+                },
+                "discount_percentage": {
+                    "type": "string",
+                    "example": "20"
+                },
+                "final": {
+                    "type": "integer",
+                    "example": 8000
+                },
+                "original": {
+                    "type": "integer",
+                    "example": 10000
+                }
+            }
+        },
+        "product.ProductRequest": {
+            "description": "ProductRequest is the input for creating a new product",
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Legendary Boots"
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 10000
+                },
+                "sku": {
+                    "type": "string",
+                    "example": "000005"
+                }
+            }
+        },
+        "product.ProductResponse": {
+            "description": "ProductResponse is the output when retrieving product details",
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "example": "Boots"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Legendary boots"
+                },
+                "price": {
+                    "$ref": "#/definitions/product.PriceResponse"
+                },
+                "sku": {
+                    "type": "string",
+                    "example": "000005"
+                }
+            }
+        }
+    }
+}

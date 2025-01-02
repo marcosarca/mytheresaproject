@@ -1,0 +1,246 @@
+definitions:
+  apierror.ApiError:
+    properties:
+      message:
+        type: string
+    type: object
+  discount.DiscountRequest:
+    description: DiscountRequest is the input for creating a new discount
+    properties:
+      discount_type_id:
+        example: 1
+        type: integer
+      percentage:
+        example: 10
+        type: integer
+      target:
+        example: boots
+        type: string
+    type: object
+  discount.DiscountResponse:
+    description: DiscountResponse is the response structure when fetching discounts
+    properties:
+      discount_type:
+        $ref: '#/definitions/discount.DiscountType'
+      id:
+        example: "1"
+        type: string
+      percentage:
+        example: 10
+        type: integer
+      target:
+        example: boots
+        type: string
+    type: object
+  discount.DiscountType:
+    properties:
+      id:
+        example: 1
+        type: integer
+      type:
+        example: category
+        type: string
+    type: object
+  discount.GeneralDiscount:
+    description: GeneralDiscount defines the fields for a general discount, including
+      percentage and target
+    properties:
+      discount_type:
+        $ref: '#/definitions/discount.DiscountType'
+      discount_type_id:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      percentage:
+        example: 10
+        type: integer
+      target:
+        example: boots
+        type: string
+    type: object
+  product.PriceResponse:
+    description: PriceResponse includes the original and final price of a product,
+      along with any discounts
+    properties:
+      currency:
+        example: EUR
+        type: string
+      discount_percentage:
+        example: "20"
+        type: string
+      final:
+        example: 8000
+        type: integer
+      original:
+        example: 10000
+        type: integer
+    type: object
+  product.ProductRequest:
+    description: ProductRequest is the input for creating a new product
+    properties:
+      category_id:
+        example: 1
+        type: integer
+      name:
+        example: Legendary Boots
+        type: string
+      price:
+        example: 10000
+        type: integer
+      sku:
+        example: "000005"
+        type: string
+    type: object
+  product.ProductResponse:
+    description: ProductResponse is the output when retrieving product details
+    properties:
+      category:
+        example: Boots
+        type: string
+      name:
+        example: Legendary boots
+        type: string
+      price:
+        $ref: '#/definitions/product.PriceResponse'
+      sku:
+        example: "000005"
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /discounts:
+    get:
+      description: Retrieve a list of all available discounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/discount.GeneralDiscount'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+      summary: Get all discounts
+    post:
+      consumes:
+      - application/json
+      description: Create a new discount with the provided details
+      parameters:
+      - description: Discount details
+        in: body
+        name: discount
+        required: true
+        schema:
+          $ref: '#/definitions/discount.DiscountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/discount.DiscountResponse'
+        "400":
+          description: Wrong body
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+      summary: Create a new discount
+  /products:
+    get:
+      description: Retrieve a list of products, with optional filtering by category
+        and price range
+      parameters:
+      - default: 5
+        description: Limit the number of products
+        in: query
+        name: limit
+        type: integer
+      - description: Filter products by category ID
+        in: query
+        name: category
+        type: string
+      - description: Filter products with price less than
+        in: query
+        name: priceLessThan
+        type: integer
+      - description: Filter products with price greater than
+        in: query
+        name: priceGreaterThan
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/product.ProductResponse'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+      summary: List all products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product with the provided details
+      parameters:
+      - description: Product details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product.ProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/product.ProductResponse'
+        "400":
+          description: Wrong body
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+      summary: Create a new product
+  /products/{id}:
+    get:
+      description: Get the details of a product by its SKU
+      parameters:
+      - description: Product SKU
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.ProductResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.ApiError'
+      summary: Get a product by SKU
+swagger: "2.0"

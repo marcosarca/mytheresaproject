@@ -1,0 +1,17 @@
+# Go binary files
+*.exe
+*.exe~
+*.out
+*.test
+mytheresa
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Go modules cache
+vendor/
