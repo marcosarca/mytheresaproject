@@ -3,7 +3,6 @@ package product_test
 import (
 	"mytheresa/pkg/category"
 	"mytheresa/pkg/product"
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -56,8 +55,8 @@ func TestProduct_GetIdentifier(t *testing.T) {
 func TestNewCategoryFilter(t *testing.T) {
 	filter := product.NewCategoryFilter("1", "=")
 
-	field, _ := reflect.TypeOf(product.Product{}).FieldByName("CategoryID")
-	assert.Equal(t, field.Name, filter.GetField().Name)
+	columnName := "category_id"
+	assert.Equal(t, columnName, filter.GetColumnName())
 	assert.Equal(t, "1", filter.GetValue())
 	assert.Equal(t, "=", filter.GetOperand())
 }
@@ -65,8 +64,8 @@ func TestNewCategoryFilter(t *testing.T) {
 func TestNewPriceFilter(t *testing.T) {
 	filter := product.NewPriceFilter("100", ">")
 
-	field, _ := reflect.TypeOf(product.Product{}).FieldByName("Price")
-	assert.Equal(t, field.Name, filter.GetField().Name)
+	columnName := "price"
+	assert.Equal(t, columnName, filter.GetColumnName())
 	assert.Equal(t, "100", filter.GetValue())
 	assert.Equal(t, ">", filter.GetOperand())
 }

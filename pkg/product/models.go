@@ -3,7 +3,6 @@ package product
 import (
 	"mytheresa/internal/database"
 	"mytheresa/pkg/category"
-	"reflect"
 )
 
 type Product struct {
@@ -78,12 +77,12 @@ type PriceResponse struct {
 }
 
 type categoryFilter struct {
-	field   reflect.StructField
+	field   string
 	Value   string
 	Operand string
 }
 
-func (f *categoryFilter) GetField() reflect.StructField {
+func (f *categoryFilter) GetColumnName() string {
 	return f.field
 }
 
@@ -96,23 +95,20 @@ func (f *categoryFilter) GetOperand() string {
 }
 
 func NewCategoryFilter(value string, operand string) database.Filter {
-	t := reflect.TypeOf(Product{})
-	field, _ := t.FieldByName("CategoryID")
-
 	return &categoryFilter{
-		field:   field,
+		field:   "category_id",
 		Value:   value,
 		Operand: operand,
 	}
 }
 
 type priceFilter struct {
-	field   reflect.StructField
+	field   string
 	Value   string
 	Operand string
 }
 
-func (f *priceFilter) GetField() reflect.StructField {
+func (f *priceFilter) GetColumnName() string {
 	return f.field
 }
 
@@ -125,10 +121,8 @@ func (f *priceFilter) GetOperand() string {
 }
 
 func NewPriceFilter(value string, operand string) database.Filter {
-	t := reflect.TypeOf(Product{})
-	field, _ := t.FieldByName("Price")
 	return &priceFilter{
-		field:   field,
+		field:   "price",
 		Value:   value,
 		Operand: operand,
 	}

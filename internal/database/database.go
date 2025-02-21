@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"reflect"
 )
 
 type Database interface {
@@ -14,7 +13,7 @@ type Database interface {
 }
 
 type Filter interface {
-	GetField() reflect.StructField
+	GetColumnName() string
 	GetValue() interface{}
 	GetOperand() string
 }
