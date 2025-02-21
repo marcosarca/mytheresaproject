@@ -111,7 +111,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /discounts:
+  /v1/discounts:
     get:
       description: Retrieve a list of all available discounts
       produces:
@@ -155,7 +155,7 @@ paths:
           schema:
             $ref: '#/definitions/apierror.ApiError'
       summary: Create a new discount
-  /products:
+  /v1/products:
     get:
       description: Retrieve a list of products, with optional filtering by category
         and price range
@@ -218,7 +218,7 @@ paths:
           schema:
             $ref: '#/definitions/apierror.ApiError'
       summary: Create a new product
-  /products/{id}:
+  /v1/products/{id}:
     get:
       description: Get the details of a product by its SKU
       parameters:
