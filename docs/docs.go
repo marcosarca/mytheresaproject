@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/discounts": {
+        "/v1/discounts": {
             "get": {
                 "description": "Retrieve a list of all available discounts",
                 "produces": [
@@ -82,7 +82,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/products": {
+        "/v1/products": {
             "get": {
                 "description": "Retrieve a list of products, with optional filtering by category and price range",
                 "produces": [
@@ -176,7 +176,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/{id}": {
+        "/v1/products/{id}": {
             "get": {
                 "description": "Get the details of a product by its SKU",
                 "produces": [
