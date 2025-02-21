@@ -7,7 +7,6 @@ import (
 	"mytheresa/internal/database/sqlite"
 	loggermocks "mytheresa/internal/logger/mocks"
 	"os"
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,12 +24,12 @@ type dummyModel struct {
 
 // Dummy filter implementation that satisfies the database.Filter interface
 type dummyFilter struct {
-	field   reflect.StructField
+	field   string
 	operand string
 	value   interface{}
 }
 
-func (f *dummyFilter) GetField() reflect.StructField {
+func (f *dummyFilter) GetColumnName() string {
 	return f.field
 }
 
@@ -43,8 +42,7 @@ func (f *dummyFilter) GetOperand() string {
 }
 
 func NewDummyFilter(operand string, value interface{}) *dummyFilter {
-	t := reflect.TypeOf(dummyModel{})
-	field, _ := t.FieldByName("Name")
+	field := "Name"
 
 	return &dummyFilter{
 		field:   field,

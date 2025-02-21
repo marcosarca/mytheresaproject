@@ -30,7 +30,7 @@ This is a backend application for managing products, categories, and discounts u
 ## Testing
 1. To test the application, run the following command in the root of the project:
     ```bash
-    go test ./...
+    make test
    
 ## API Documentation
 

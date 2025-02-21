@@ -6,7 +6,6 @@ import (
 	"mytheresa/internal/database"
 	"mytheresa/internal/logger"
 	"reflect"
-	"regexp"
 	"strings"
 
 	"gorm.io/gorm"
@@ -14,7 +13,6 @@ import (
 
 const (
 	FOREIGNKEY_TAG = "foreignKey"
-	COLUMN_TAG     = "column"
 )
 
 type sqliteDB struct {
@@ -87,32 +85,10 @@ func preloadTables(query *gorm.DB, t reflect.Type) *gorm.DB {
 func applyFilters(query *gorm.DB, filters ...database.Filter) *gorm.DB {
 
 	for _, filter := range filters {
-		q := fmt.Sprintf("%s %s ?", getDBFieldNameByTag(filter.GetField(), COLUMN_TAG), filter.GetOperand())
+		q := fmt.Sprintf("%s %s ?", filter.GetColumnName(), filter.GetOperand())
 		query = query.Where(q, filter.GetValue())
 	}
 	return query
-}
-
-func getDBFieldNameByTag(field reflect.StructField, tag string) string {
-	name := toSnakeCase(field.Name)
-
-	gormTag := field.Tag.Get("gorm")
-	for _, tagPart := range strings.Split(gormTag, ";") {
-		if strings.HasPrefix(tagPart, fmt.Sprintf("%s:", tag)) {
-			return strings.TrimPrefix(tagPart, fmt.Sprintf("%s:", tag))
-		}
-	}
-
-	return name
-}
-
-// toSnakeCase: Utility function to get default field's column name
-func toSnakeCase(input string) string {
-	re := regexp.MustCompile("([a-z0-9])([A-Z])")
-	snake := re.ReplaceAllString(input, "${1}_${2}")
-
-	// Convert to lowercase
-	return strings.ToLower(snake)
 }
 
 func getActualType(val interface{}) reflect.Type {
